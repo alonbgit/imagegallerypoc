@@ -15,6 +15,18 @@
                 background: url('https://vignette.wikia.nocookie.net/animal-jam-clans-1/images/c/cf/PNGPIX-COM-Autumn-Tree-PNG-Transparent-Image-500x545.png/revision/latest/scale-to-width-down/440?cb=20170202040518');                
             }
         }
+
+        @media screen and (max-width: 1920px) {
+            width: 1200px;
+        }
+    
+        @media screen and (max-width: 1400px) {
+            width: 800px;
+        }
+    
+        @media screen and (max-width: 800px) {
+            width: 400px;
+        }
     }
 
 }
