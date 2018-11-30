@@ -1,0 +1,35 @@
+
+.image-gallery {
+    display: flex;
+    height: 100%;
+
+    button.disabled {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
+    .scroller {
+        overflow: hidden;
+        position: relative;
+        flex: 1;
+
+        .content {
+            display: flex;
+            box-sizing: border-box;
+            transition: transform 0.4s ease-out;
+            height: 100%;
+            position: absolute;
+            align-items: flex-end;
+    
+            > div {
+                margin-left: 10px;
+                box-sizing: border-box;
+                border: 1px solid black;
+            }
+    
+            > div:first-child {
+                margin-left: 0px;
+            }
+        }
+    }
+}
