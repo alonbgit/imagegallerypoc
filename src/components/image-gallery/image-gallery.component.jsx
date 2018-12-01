@@ -3,27 +3,26 @@ import './image-gallery.scss';
 import classNames from 'classnames';
 
 class ImageGallery extends Component {
-
     constructor (props) {
         super(props);
-
         this.isTransition = false;
     }
 
     state = {
         position: 0,
-        isRightEnabled: false,
-        isLeftEnabled: false,
+        isNextEnabled: false,
+        isPrevEnabled: false,
         isTransition: false,
     }
 
     componentDidMount () {
-        this.contentRef.addEventListener('transitionend', this.onTransitionEnd);
-        this.checkCanMoveNext();
-        this.checkCanMovePrev();
+        this.contentRef.addEventListener('transitionend', () => this.isTransition = false);
+        this.checkDirectionButtons();
     }
 
     componentWillReceiveProps (nextProps) {
+        // in case the number of children has been reduced,
+        // we set the gallery position to 0
         if (nextProps.children.length < this.props.children.length) {
             this.setState({
                 position: 0,
@@ -33,59 +32,50 @@ class ImageGallery extends Component {
 
     componentDidUpdate (previousProps) {
         if (previousProps.children !== this.props.children) {
-            this.checkCanMoveNext();
-            this.checkCanMovePrev();
+            this.checkDirectionButtons();
         }
-    }
-    
-    onTransitionEnd = () => {
-        this.isTransition = false;
     }
 
-    checkCanMoveNext () {
-        const contentRect = this.contentRef.getBoundingClientRect();
-        const scrollerRect = this.scrollerRef.getBoundingClientRect();
-        let isRightEnabled = false;
-        if (contentRect.right > scrollerRect.right) {
-            isRightEnabled = true;
-        }
+    checkDirectionButtons () {
         this.setState({
-            isRightEnabled,
+            isNextEnabled: this.canMoveNext(),
+            isPrevEnabled: this.canMovePrev(),
         });
     }
 
-    checkCanMovePrev () {
+    canMoveNext () {
         const contentRect = this.contentRef.getBoundingClientRect();
         const scrollerRect = this.scrollerRef.getBoundingClientRect();
-        let isLeftEnabled = false;
-        if (contentRect.left < scrollerRect.left) {
-            isLeftEnabled = true;
-        }
-        this.setState({
-            isLeftEnabled,
-        });
+        return contentRect.right > scrollerRect.right;
+    }
+
+    canMovePrev () {
+        const contentRect = this.contentRef.getBoundingClientRect();
+        const scrollerRect = this.scrollerRef.getBoundingClientRect();
+        return contentRect.left < scrollerRect.left;
+
     }
 
     moveNext = () => {
+        // in case the gallery is currently transitioned, don't do anything
         if (this.isTransition) {
             return;
         }
 
+        // checks if the gallery can move next
         const contentRect = this.contentRef.getBoundingClientRect();
         const scrollerRect = this.scrollerRef.getBoundingClientRect();
         if (contentRect.right <= scrollerRect.right) {
             return;
         }
 
-        this.isTransition = true;
-
         const diff = contentRect.right - scrollerRect.right;
         let position;
-        let isRightEnabled = true;
+        let isNextEnabled = true;
 
         if (diff <= scrollerRect.width) {
             position = this.state.position + diff; 
-            isRightEnabled = false;
+            isNextEnabled = false;
         } else {
             const children = this.contentRef.children;
             for (let i = 0; i < children.length; i++) {
@@ -97,33 +87,35 @@ class ImageGallery extends Component {
             }
         }
 
+        this.isTransition = true;
+
         this.setState({
             position,
-            isRightEnabled,
-            isLeftEnabled: true,
+            isNextEnabled,
+            isPrevEnabled: true,
         });
 
     }
 
     movePrev = () => {
+        // in case the gallery is currently transitioned, don't do anything
         if (this.isTransition) {
             return;
         }
 
+        // checks if the gallery can move previous
         const contentRect = this.contentRef.getBoundingClientRect();
         const scrollerRect = this.scrollerRef.getBoundingClientRect();
         if (contentRect.left >= scrollerRect.left) {
             return;
         }
 
-        this.isTransition = true;
-
         const diff = scrollerRect.left - contentRect.left;
         let position;
-        let isLeftEnabled = true;
+        let isPrevEnabled = true;
         if (diff <= scrollerRect.width) {
             position = this.state.position - diff;
-            isLeftEnabled = false;
+            isPrevEnabled = false;
         } else {
             const children = this.contentRef.children;
             for (let i = children.length - 1; i >= 0; i--) {
@@ -135,10 +127,12 @@ class ImageGallery extends Component {
             }
         }
 
+        this.isTransition = true;
+
         this.setState({
             position,
-            isRightEnabled: true,
-            isLeftEnabled,
+            isNextEnabled: true,
+            isPrevEnabled,
         });
     }
 
@@ -147,7 +141,7 @@ class ImageGallery extends Component {
             <div className='image-gallery'>
                 <i 
                     onClick={this.movePrev}
-                    className={classNames('gallery-arrow gallery-arrow-left fas fa-angle-left', { hidden: !this.state.isLeftEnabled })}
+                    className={classNames('gallery-arrow gallery-arrow-left fas fa-angle-left', { hidden: !this.state.isPrevEnabled })}
                 />
                 <div className='scroller' ref={(c) => { this.scrollerRef = c; }}>
                     <div
@@ -160,12 +154,11 @@ class ImageGallery extends Component {
                 </div>
                 <i
                     onClick={this.moveNext}
-                    className={classNames('gallery-arrow gallery-arrow-right fas fa-angle-right', { hidden: !this.state.isRightEnabled })}
+                    className={classNames('gallery-arrow gallery-arrow-right fas fa-angle-right', { hidden: !this.state.isNextEnabled })}
                 />
             </div>
         );
     }
-
 }
 
 export default ImageGallery;
