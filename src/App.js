@@ -16,8 +16,8 @@ class App extends Component {
   }
 
   generateRandomInt () {
-    const int = Math.floor(Math.random() * 4); 
-    const values = [50, 100, 150, 200];
+    const int = Math.floor(Math.random() * 3); 
+    const values = [100, 150, 200];
     return values[int];
   }
 
