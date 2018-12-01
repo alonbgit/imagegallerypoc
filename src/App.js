@@ -23,7 +23,7 @@ class App extends Component {
 
   generateCells () {
     const values = [];
-    for(let i = this.state.cells.length; i < this.state.cells.length + 20; i++) {
+    for(let i = this.state.cells.length; i < this.state.cells.length + 50; i++) {
       values.push(<div style={{ width: this.generateRandomInt(), height: this.generateRandomInt() }} key={i}>{i}</div>);
     }
     return values;

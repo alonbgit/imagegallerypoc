@@ -19,7 +19,6 @@ class ImageGallery extends Component {
 
     componentDidMount () {
         this.contentRef.addEventListener('transitionend', this.onTransitionEnd);
-
         this.checkCanMoveNext();
         this.checkCanMovePrev();
     }
@@ -41,8 +40,6 @@ class ImageGallery extends Component {
     
     onTransitionEnd = () => {
         this.isTransition = false;
-        this.checkCanMoveNext();
-        this.checkCanMovePrev();
     }
 
     checkCanMoveNext () {
@@ -84,8 +81,11 @@ class ImageGallery extends Component {
 
         const diff = contentRect.right - scrollerRect.right;
         let position;
+        let isRightEnabled = true;
+
         if (diff <= scrollerRect.width) {
             position = this.state.position + diff; 
+            isRightEnabled = false;
         } else {
             const children = this.contentRef.children;
             for (let i = 0; i < children.length; i++) {
@@ -99,6 +99,8 @@ class ImageGallery extends Component {
 
         this.setState({
             position,
+            isRightEnabled,
+            isLeftEnabled: true,
         });
 
     }
@@ -118,8 +120,10 @@ class ImageGallery extends Component {
 
         const diff = scrollerRect.left - contentRect.left;
         let position;
+        let isLeftEnabled = true;
         if (diff <= scrollerRect.width) {
-            position = this.state.position - diff; 
+            position = this.state.position - diff;
+            isLeftEnabled = false;
         } else {
             const children = this.contentRef.children;
             for (let i = children.length - 1; i >= 0; i--) {
@@ -133,18 +137,18 @@ class ImageGallery extends Component {
 
         this.setState({
             position,
+            isRightEnabled: true,
+            isLeftEnabled,
         });
     }
 
     render () {
         return (
             <div className='image-gallery'>
-                <button 
+                <i 
                     onClick={this.movePrev}
-                    className={classNames({ disabled: !this.state.isLeftEnabled })}
-                >
-                    Left
-                </button>
+                    className={classNames('gallery-arrow gallery-arrow-left fas fa-angle-left', { hidden: !this.state.isLeftEnabled })}
+                />
                 <div className='scroller' ref={(c) => { this.scrollerRef = c; }}>
                     <div
                         className='content'
@@ -154,11 +158,10 @@ class ImageGallery extends Component {
                         {this.props.children}
                     </div>
                 </div>
-                <button
+                <i
                     onClick={this.moveNext}
-                    className={classNames({ disabled: !this.state.isRightEnabled })}
-                >
-                Right</button>
+                    className={classNames('gallery-arrow gallery-arrow-right fas fa-angle-right', { hidden: !this.state.isRightEnabled })}
+                />
             </div>
         );
     }
