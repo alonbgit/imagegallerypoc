@@ -11,6 +11,7 @@ $arrow-margin: 40px;
         align-items: center;
         font-size: 50px;
         cursor: pointer;
+        will-change: opacity;
 
         &.gallery-arrow-next {
             margin-left: $arrow-margin;
@@ -40,6 +41,7 @@ $arrow-margin: 40px;
             height: 100%;
             position: absolute;
             align-items: flex-end;
+            will-change: transform;
     
             > div {
                 margin-left: 10px;
