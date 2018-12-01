@@ -6,12 +6,12 @@ $arrow-margin: 40px;
 
     .gallery-arrow {
         opacity: 1;
-        transition: opacity 0.1s;
+        transition: opacity, width 0.3s;
         display: flex;
         align-items: center;
         font-size: 50px;
         cursor: pointer;
-        will-change: opacity;
+        will-change: opacity, width;
 
         &.gallery-arrow-next {
             margin-left: $arrow-margin;
@@ -26,6 +26,7 @@ $arrow-margin: 40px;
             width: 0;
             margin: 0;
             pointer-events: none;
+            cursor: default;
         }
     }
 
