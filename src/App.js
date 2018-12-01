@@ -51,12 +51,14 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <button onClick={this.addMore}>add more</button>
-        <button onClick={this.loadLess}>add less</button>
-        <div className='image-gallery-container'>
-          <ImageGallery>
-            {this.state.cells}
-          </ImageGallery>
+        <button onClick={this.addMore}>Add More</button>
+        <button onClick={this.loadLess}>Add Less</button>
+        <div className='center-gallery'>
+          <div className='image-gallery-container'>
+            <ImageGallery>
+              {this.state.cells}
+            </ImageGallery>
+          </div>
         </div>
       </div>
     );

@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
-import './image-gallery.scss';
 import classNames from 'classnames';
+import PropTypes from 'prop-types';
+import './image-gallery.scss';
 
 class ImageGallery extends Component {
+
+    static propTypes = {
+        children: PropTypes.node.isRequired,
+    }
+
     constructor (props) {
         super(props);
         this.isTransition = false;
@@ -141,7 +147,7 @@ class ImageGallery extends Component {
             <div className='image-gallery'>
                 <i 
                     onClick={this.movePrev}
-                    className={classNames('gallery-arrow gallery-arrow-left fas fa-angle-left', { hidden: !this.state.isPrevEnabled })}
+                    className={classNames('gallery-arrow gallery-arrow-prev fas fa-angle-left', { hidden: !this.state.isPrevEnabled })}
                 />
                 <div className='scroller' ref={(c) => { this.scrollerRef = c; }}>
                     <div
@@ -154,7 +160,7 @@ class ImageGallery extends Component {
                 </div>
                 <i
                     onClick={this.moveNext}
-                    className={classNames('gallery-arrow gallery-arrow-right fas fa-angle-right', { hidden: !this.state.isNextEnabled })}
+                    className={classNames('gallery-arrow gallery-arrow-next fas fa-angle-right', { hidden: !this.state.isNextEnabled })}
                 />
             </div>
         );
